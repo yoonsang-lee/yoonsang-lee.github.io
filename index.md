@@ -4,14 +4,31 @@ layout: default
 
 Hello! I am a Ph.D. student in Computer Science at Princeton University, advised by Prof. <a href="https://www.cs.princeton.edu/~danqic/">Danqi Chen</a>. Prior to that, I received B.S. in CSE from Seoul National University, and I was fortunate to be working with Prof. <a href="https://eunsol.github.io">Eunsol Choi</a>.
 
-My research focuses on NLP, where I am interested in making large language models better utilize dynamic information and acquire meaningful knowledge. Current areas of interest include retrieval-augmented generation, multi-turn interactions, and web agents.
+My research focuses on NLP, where I am interested in making large language models better utilize dynamic information and acquire meaningful knowledge.
+
+Recently, I am interested in retrieval-augmented generation, deep research agents, and human-AI collaboration.
+
+<hr>
+
+### News
+
+<div style='height:70px; overflow:auto; padding-top: 0px; padding-bottom: 20px'>
+          <li style='padding:0px; margin:0px'>(Oct/25) Attending COLM 2025 at Montreal 🇨🇦</li>
+          <li style='padding:0px; margin:0px'>(Aug/25) Started my PhD at Princeton University</li>
+          <li style='padding:0px; margin:0px'>(Aug/25) Received Best Undergraduate Thesis award</li>
+          <li style='padding:0px; margin:0px'>(Jul/25) One paper accepted at COLM 2025</li>
+          <li style='padding:0px; margin:0px'>(Jun/25) Received KFAS PhD Scholarhsip</li>
+          <li style='padding:0px; margin:0px'>(Sep/24) One paper accepted at EMNLP 2024</li>
+          <li style='padding:0px; margin:0px'>(Jul/24) One paper accepted at COLM 2024</li>
+          <li style='padding:0px; margin:0px'>(Mar/24) One paper accepted at NAACL 2024</li>
+          </div>
 
 <hr>
 
 ### Publications
 
 <p style="margin-top:0">
-<a href="https://arxiv.org/abs/2410.20088">RARe: Retrieval Augmented Retrieval With In-context Examples</a> <br>
+<a href="https://openreview.net/forum?id=9FES5yT9v3#discussion">RARe: Retrieval Augmented Retrieval With In-context Examples</a> <br>
 <span style="font-size:13px">Atula Tejaswi, <b>Yoonsang Lee</b>, Sujay Sanghavi*, Eunsol Choi*<br>COLM 2025</span>
 </p>
 
@@ -63,6 +80,8 @@ My research focuses on NLP, where I am interested in making large language model
     <li>B.S. in Computer Science and Engineering</li>
   </ul>
 </p>
+
+<hr>
 
 ### Teaching
 
