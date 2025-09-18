@@ -2,11 +2,11 @@
 layout: default
 ---
 
-Hello! I am a Ph.D. student in Computer Science at Princeton University, advised by Prof. <a href="https://www.cs.princeton.edu/~danqic/">Danqi Chen</a>. Prior to that, I received B.S. in CSE from Seoul National University, and I was fortunate to be working with Prof. <a href="https://eunsol.github.io">Eunsol Choi</a>.
+Hello! I am a Ph.D. student in Computer Science at Princeton University, advised by <a href="https://www.cs.princeton.edu/~danqic/">Danqi Chen</a>. Prior to that, I was an undergrad at Seoul National University, fortunate to be working with <a href="https://eunsol.github.io">Eunsol Choi</a>.
 
 My research focuses on NLP, where I am interested in making large language models better utilize dynamic information and acquire meaningful knowledge.
 
-Recently, I am interested in retrieval-augmented generation, deep research agents, and human-AI collaboration.
+Recently, I've been thinking about Retrieval-augmented generation, Deep research agents, and Human-AI interaction. Feel free to reach out for collaboration!
 
 <hr>
 
