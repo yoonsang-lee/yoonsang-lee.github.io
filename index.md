@@ -2,15 +2,15 @@
 layout: default
 ---
 
-Hello! I am a Ph.D. student in Computer Science at Princeton University, advised by <a href="https://www.cs.princeton.edu/~danqic/">Danqi Chen</a>. Prior to that, I was an undergrad at Seoul National University, fortunate to be working with <a href="https://eunsol.github.io">Eunsol Choi</a>.
+Hello! I am a Ph.D. student in Computer Science at Princeton University, advised by <a href="https://www.cs.princeton.edu/~danqic/">Danqi Chen</a>. Prior to that, I did my undergrad at Seoul National University, fortunate to be working with <a href="https://eunsol.github.io">Eunsol Choi</a>.
 
-My research focuses on NLP, where I am interested in making large language models better utilize dynamic information and acquire meaningful knowledge.
+My research focuses on Natural Language Processing, where I am interested in making large language models better utilize dynamic information and acquire meaningful knowledge.
 
-Recently, I've been thinking about Retrieval-augmented generation, Deep research agents, and Human-AI interaction. Feel free to reach out for collaboration!
+Recently, I've been thinking about deep research agents, long-context models, and human-AI interaction. Feel free to reach out for collaboration!
 
 <hr>
 
-### News
+<!-- ### News
 
 <div style='height:70px; overflow:auto; padding-top: 0px; padding-bottom: 20px'>
           <li style='padding:0px; margin:0px'>(Oct/25) Attending COLM 2025 at Montreal 🇨🇦</li>
@@ -23,37 +23,34 @@ Recently, I've been thinking about Retrieval-augmented generation, Deep research
           <li style='padding:0px; margin:0px'>(Mar/24) One paper accepted at NAACL 2024</li>
           </div>
 
-<hr>
+<hr> -->
 
 ### Publications
 
 <p style="margin-top:0">
 <a href="https://openreview.net/forum?id=9FES5yT9v3#discussion">RARe: Retrieval Augmented Retrieval With In-context Examples</a> <br>
-<span style="font-size:13px">Atula Tejaswi, <b>Yoonsang Lee</b>, Sujay Sanghavi*, Eunsol Choi*<br>COLM 2025</span>
+<span style="font-size:13px">Atula Tejaswi, <b>Yoonsang Lee</b>, Sujay Sanghavi*, Eunsol Choi*<br>In COLM 2025.</span> 
 </p>
 
 <p style="margin-top:0">
 <a href="https://aclanthology.org/2024.findings-emnlp.274/">Disentangling Questions from Query Generation for Task-Adaptive Retrieval</a> <br>
-<span style="font-size:13px"><b>Yoonsang Lee</b>, Minsoo Kim, Seung-won Hwang<br>Findings of EMNLP 2024 (short)<br>ENLSP Workshop @ NeurIPS 2024</span> <br>
-<span style="font-size:12px"><a href="./assets/pdf/DisentanglingQF_poster.pdf">[poster]</a></span>
+<span style="font-size:13px"><b>Yoonsang Lee</b>, Minsoo Kim, Seung-won Hwang<br>In Findings of EMNLP 2024 (short).</span> <span style="font-size:12px"><a href="./assets/pdf/DisentanglingQF_poster.pdf">[poster]</a></span><br>
+ <span style="font-size:11px">Also presented at ENLSP Workshop @ NeurIPS 2024.</span> 
 </p>
 
 <p style="margin-top:0">
   <a href="https://openreview.net/forum?id=mkYCfO822n">AmbigDocs: Reasoning across Documents on Different Entities under the Same Name</a> <br>
-  <span style="font-size:13px"><b>Yoonsang Lee</b>, Xi Ye, Eunsol Choi<br>COLM 2024</span><br>
-  <span style="font-size:12px"><a href="https://ambigdocs.github.io">[Project Website]</a> <a href="./assets/pdf/ambigdocsRA_poster.pdf">[poster]</a></span>
+  <span style="font-size:13px"><b>Yoonsang Lee</b>, Xi Ye, Eunsol Choi<br>In COLM 2024.</span> <span style="font-size:12px"><a href="https://ambigdocs.github.io">[website]</a> <a href="./assets/pdf/ambigdocsRA_poster.pdf">[poster]</a></span>
 </p>
 
 <p style="margin-top:0">
   <a href="https://aclanthology.org/2024.findings-naacl.133/">Crafting In-context Examples according to LMs' Parametric Knowledge</a> <br>
-  <span style="font-size:13px"><b>Yoonsang Lee</b><sup>*</sup>, Pranav Atreya<sup>*</sup>, Xi Ye, Eunsol Choi<br>Findings of NAACL 2024</span><br>
-  <span style="font-size:12px"><a href="./assets/pdf/craftingIE_poster.pdf">[poster]</a></span>
+  <span style="font-size:13px"><b>Yoonsang Lee</b><sup>*</sup>, Pranav Atreya<sup>*</sup>, Xi Ye, Eunsol Choi<br>In Findings of NAACL 2024.</span> <span style="font-size:12px"><a href="./assets/pdf/craftingIE_poster.pdf">[poster]</a></span>
 </p>
 
 <p style="margin-top:0">
   <a href="https://aclanthology.org/2023.argmining-1.24/">MILAB at PragTag-2023: Enhancing Cross-Domain Generalization through Data Augmentation with Reduced Uncertainty</a> <br>
-  <span style="font-size:13px"><b>Yoonsang Lee</b><sup>*</sup>, Dongryeol Lee<sup>*</sup>, Kyomin Jung<br>ArgMining Workshop @ EMNLP 2023 </span><br>
-  <span style="font-size:12px"><a href="./assets/pdf/enhancingCG_poster.pdf">[poster]</a></span>
+  <span style="font-size:13px"><b>Yoonsang Lee</b><sup>*</sup>, Dongryeol Lee<sup>*</sup>, Kyomin Jung<br>In Workshop on Argument Mining @ EMNLP 2023. </span> <span style="font-size:12px"><a href="./assets/pdf/enhancingCG_poster.pdf">[poster]</a></span>
 </p>
 <hr>
 
@@ -61,8 +58,8 @@ Recently, I've been thinking about Retrieval-augmented generation, Deep research
 
 <p style="margin:0">
 <div style="display:flex; justify-content:space-between">
-    <a href="https://www.princeton.edu">Princeton University</a>
-    <span style="font-size:11px"> Aug 2025 - Present</span>
+    <b>Princeton University</b>
+    <span style="font-size:12px"> Aug 2025 - Present</span>
   </div>
 
   <ul style="margin:0">
@@ -72,8 +69,8 @@ Recently, I've been thinking about Retrieval-augmented generation, Deep research
 
 <p style="margin:0">
 <div style="display:flex; justify-content:space-between">
-    <a href="https://snu.ac.kr/">Seoul National University</a>
-    <span style="font-size:11px"> Mar 2019 - Aug 2025</span>
+    <b>Seoul National University</b>
+    <span style="font-size:12px"> Mar 2019 - Aug 2025</span>
   </div>
 
   <ul style="margin:0">
@@ -106,7 +103,7 @@ Recently, I've been thinking about Retrieval-augmented generation, Deep research
 
 ### Service
 
-<div><b>Conference Reviewer</b>: ACL ARR 2024, ICLR 2024</div>
+<div><b>Conference Reviewer</b>: ACL ARR 2024-2025, ICLR 2024</div>
 <div><b>Workshop Reviewer</b>: ACL SRW 2024, ENLSP 2024, KnowledgeNLP 2025</div>
 
 <!-- ### Small image
