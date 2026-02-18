@@ -4,9 +4,9 @@ layout: default
 
 Hello! I am a Ph.D. student in Computer Science at Princeton University, advised by <a href="https://www.cs.princeton.edu/~danqic/">Danqi Chen</a>. Prior to that, I did my undergrad at Seoul National University, fortunate to be working with <a href="https://eunsol.github.io">Eunsol Choi</a>.
 
-My research focuses on Natural Language Processing, where I am interested in making large language models better utilize dynamic information and acquire meaningful knowledge.
+My research focuses on Natural Language Processing, where I am interested in making large language models better utilize dynamic information at test time and acquire meaningful knowledge.
 
-Recently, I've been thinking about deep research agents, long-context models, and human-AI interaction. Feel free to reach out for collaboration!
+Recently, I've been thinking about context learning, long-horizon agents, and human-AI interaction. Feel free to reach out for collaboration!
 
 <hr>
 
