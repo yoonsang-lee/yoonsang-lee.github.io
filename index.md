@@ -2,114 +2,111 @@
 layout: default
 ---
 
-Hello! I am a Ph.D. student in Computer Science at Princeton University, advised by <a href="https://www.cs.princeton.edu/~danqic/">Danqi Chen</a>. Prior to that, I did my undergrad at Seoul National University, fortunate to be working with <a href="https://eunsol.github.io">Eunsol Choi</a>.
+<div class="bento">
 
-My research focuses on Natural Language Processing, where I am interested in making large language models better utilize dynamic information at test time and acquire meaningful knowledge.
-
-Recently, I've been thinking about context learning, long-horizon agents, and human-AI interaction. Feel free to reach out for collaboration!
-
-<hr>
-
-<!-- ### News
-
-<div style='height:70px; overflow:auto; padding-top: 0px; padding-bottom: 20px'>
-          <li style='padding:0px; margin:0px'>(Oct/25) Attending COLM 2025 at Montreal 🇨🇦</li>
-          <li style='padding:0px; margin:0px'>(Aug/25) Started my PhD at Princeton University</li>
-          <li style='padding:0px; margin:0px'>(Aug/25) Received Best Undergraduate Thesis award</li>
-          <li style='padding:0px; margin:0px'>(Jul/25) One paper accepted at COLM 2025</li>
-          <li style='padding:0px; margin:0px'>(Jun/25) Received KFAS PhD Scholarhsip</li>
-          <li style='padding:0px; margin:0px'>(Sep/24) One paper accepted at EMNLP 2024</li>
-          <li style='padding:0px; margin:0px'>(Jul/24) One paper accepted at COLM 2024</li>
-          <li style='padding:0px; margin:0px'>(Mar/24) One paper accepted at NAACL 2024</li>
-          </div>
-
-<hr> -->
-
-### Publications
-
-<p style="margin-top:0">
-<a href="https://openreview.net/forum?id=9FES5yT9v3#discussion">RARe: Retrieval Augmented Retrieval With In-context Examples</a> <br>
-<span style="font-size:13px">Atula Tejaswi, <b>Yoonsang Lee</b>, Sujay Sanghavi*, Eunsol Choi*<br>In COLM 2025.</span> 
-</p>
-
-<p style="margin-top:0">
-<a href="https://aclanthology.org/2024.findings-emnlp.274/">Disentangling Questions from Query Generation for Task-Adaptive Retrieval</a> <br>
-<span style="font-size:13px"><b>Yoonsang Lee</b>, Minsoo Kim, Seung-won Hwang<br>In Findings of EMNLP 2024 (short).</span> <span style="font-size:12px"><a href="./assets/pdf/DisentanglingQF_poster.pdf">[poster]</a></span><br>
- <span style="font-size:11px">Also presented at ENLSP Workshop @ NeurIPS 2024.</span> 
-</p>
-
-<p style="margin-top:0">
-  <a href="https://openreview.net/forum?id=mkYCfO822n">AmbigDocs: Reasoning across Documents on Different Entities under the Same Name</a> <br>
-  <span style="font-size:13px"><b>Yoonsang Lee</b>, Xi Ye, Eunsol Choi<br>In COLM 2024.</span> <span style="font-size:12px"><a href="https://ambigdocs.github.io">[website]</a> <a href="./assets/pdf/ambigdocsRA_poster.pdf">[poster]</a></span>
-</p>
-
-<p style="margin-top:0">
-  <a href="https://aclanthology.org/2024.findings-naacl.133/">Crafting In-context Examples according to LMs' Parametric Knowledge</a> <br>
-  <span style="font-size:13px"><b>Yoonsang Lee</b><sup>*</sup>, Pranav Atreya<sup>*</sup>, Xi Ye, Eunsol Choi<br>In Findings of NAACL 2024.</span> <span style="font-size:12px"><a href="./assets/pdf/craftingIE_poster.pdf">[poster]</a></span>
-</p>
-
-<p style="margin-top:0">
-  <a href="https://aclanthology.org/2023.argmining-1.24/">MILAB at PragTag-2023: Enhancing Cross-Domain Generalization through Data Augmentation with Reduced Uncertainty</a> <br>
-  <span style="font-size:13px"><b>Yoonsang Lee</b><sup>*</sup>, Dongryeol Lee<sup>*</sup>, Kyomin Jung<br>In Workshop on Argument Mining @ EMNLP 2023. </span> <span style="font-size:12px"><a href="./assets/pdf/enhancingCG_poster.pdf">[poster]</a></span>
-</p>
-<hr>
-
-### Education
-
-<p style="margin:0">
-<div style="display:flex; justify-content:space-between">
-    <b>Princeton University</b>
-    <span style="font-size:12px"> Aug 2025 - Present</span>
+  <div class="card card-photo">
+    <img src="assets/img/prof_pic.jpg" alt="Yoonsang Lee" />
+    <nav class="photo-links">
+      <a href="assets/pdf/cv.pdf" target="_blank" title="CV"><i class="ai ai-cv"></i></a>
+      <a href="https://scholar.google.com/citations?hl=en&user=UzNbqHQAAAAJ" target="_blank" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+      <a href="https://twitter.com/yoonsang_" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="https://github.com/lilys012" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/lilys012/" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+    </nav>
   </div>
 
-  <ul style="margin:0">
-    <li>Ph.D. in Computer Science</li>
-  </ul>
-</p>
-
-<p style="margin:0">
-<div style="display:flex; justify-content:space-between">
-    <b>Seoul National University</b>
-    <span style="font-size:12px"> Mar 2019 - Aug 2025</span>
+  <div class="card card-bio">
+    <p>Hello! I am a Ph.D. student in Computer Science at Princeton University, advised by <a href="https://www.cs.princeton.edu/~danqic/">Danqi Chen</a>. Prior to that, I did my undergrad at Seoul National University, fortunate to be working with <a href="https://eunsol.github.io">Eunsol Choi</a>.</p>
+    <p>My research focuses on Natural Language Processing. I am interested in making large language models better utilize dynamic information at test time and acquire meaningful knowledge.</p>
+    <p style="margin-bottom:0">Recently I've been thinking about long-horizon agents, test-time training, and human-AI interaction. Feel free to reach out for collaboration!</p>
   </div>
 
-  <ul style="margin:0">
-    <li>B.S. in Computer Science and Engineering</li>
-  </ul>
-</p>
+  <div class="card card-publications">
+    <span class="card-label">Publications</span>
 
-<hr>
+    <div class="pub">
+      <div class="pub-body">
+        <span class="pub-title">RARe: Retrieval Augmented Retrieval With In-context Examples</span>
+        <div class="pub-meta">Atula Tejaswi, <b>Yoonsang Lee</b>, Sujay Sanghavi*, Eunsol Choi*</div>
+        <div class="pub-links">COLM 2025 &nbsp;[<a href="https://openreview.net/forum?id=9FES5yT9v3">paper</a>] [<a href="https://github.com/atutej/RARe">code</a>]</div>
+      </div>
+    </div>
 
-### Teaching
+    <div class="pub">
+      <div class="pub-body">
+        <span class="pub-title">Disentangling Questions from Query Generation for Task-Adaptive Retrieval</span>
+        <div class="pub-meta"><b>Yoonsang Lee</b>, Minsoo Kim, Seung-won Hwang</div>
+        <div class="pub-links">
+          EMNLP 2024 Findings &nbsp;[<a href="https://aclanthology.org/2024.findings-emnlp.274/">paper</a>] [<a href="https://github.com/lilys012/metaprompt-QG">code</a>]
+        </div>
+      </div>
+    </div>
 
-<div><b>Teaching Assistant</b></div>
-<div style="display:flex; justify-content:space-between;">
-    054.003 Understanding Large Language Models
-    <span style="font-size:11px"> Fall 2024</span>
+    <div class="pub">
+      <div class="pub-body">
+        <span class="pub-title">AmbigDocs: Reasoning across Documents on Different Entities under the Same Name</span>
+        <div class="pub-meta"><b>Yoonsang Lee</b>, Xi Ye, Eunsol Choi</div>
+        <div class="pub-links">
+          COLM 2024 &nbsp;[<a href="https://openreview.net/forum?id=mkYCfO822n">paper</a>] [<a href="https://github.com/lilys012/AmbigDocs">code</a>] [<a href="https://ambigdocs.github.io">website</a>] 
+        </div>
+      </div>
+    </div>
+
+    <div class="pub">
+      <div class="pub-body">
+        <span class="pub-title">Crafting In-context Examples according to LMs' Parametric Knowledge</span>
+        <div class="pub-meta"><b>Yoonsang Lee</b><sup>*</sup>, Pranav Atreya<sup>*</sup>, Xi Ye, Eunsol Choi</div>
+        <div class="pub-links">
+          NAACL 2024 Findings &nbsp;[<a href="https://aclanthology.org/2024.findings-naacl.133/">paper</a>] [<a href="https://github.com/lilys012/known_examples">code</a>]
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card card-teaching">
+    <span class="card-label">Teaching</span>
+
+    <div class="ta-entry">
+      <span>054.003 Understanding Large Language Models</span>
+      <span class="ta-date">Fall 2024</span>
+    </div>
+    <div class="ta-entry">
+      <span>4190.407 Algorithms</span>
+      <span class="ta-date">Spring 2024</span>
+    </div>
+    <div class="ta-entry">
+      <span>4190.308 Computer Architecture</span>
+      <span class="ta-date">Spring 2023</span>
+    </div>
+    <div class="ta-entry">
+      <span>4190.206A Electrical and Electronic Circuits</span>
+      <span class="ta-date">Fall 2020</span>
+    </div>
+
+  </div>
+
+  <div class="card card-service">
+    <span class="card-label">Service</span>
+    <div class="service-entry">
+      <span class="service-label">Conference Reviewer</span>
+      ACL ARR 2024–2025, ICLR 2024
+    </div>
+    <div class="service-entry">
+      <span class="service-label">Workshop Reviewer</span>
+      ACL SRW 2024, ENLSP 2024, KnowledgeNLP 2025
+    </div>
+  </div>
+
+  <div class="card card-travel">
+    <span class="card-label">My Conference Travel Journey ✈️</span>
+    <div class="travel">
+      <span>ICML 2026 🇰🇷</span>
+      <span>COLM 2025 🇨🇦</span>
+      <span>NeurIPS 2024 🇨🇦</span>
+      <span>COLM 2024 🇺🇸</span>
+      <span>NAACL 2024 🇲🇽</span>
+    </div>
+  </div>
+
 </div>
-<div style="display:flex; justify-content:space-between;">
-    4190.407 Algorithms
-    <span style="font-size:11px"> Spring 2024</span>
-</div>
-<div style="display:flex; justify-content:space-between;">
-    4190.308 Computer Architecture
-    <span style="font-size:11px"> Spring 2023</span>
-</div>
-<div style="display:flex; justify-content:space-between; margin-bottom:20px">
-    4190.206A Electrical and Electronic Circuits
-    <span style="font-size:11px"> Fall 2020</span>
-</div>
-<hr>
-
-### Service
-
-<div><b>Conference Reviewer</b>: ACL ARR 2024-2025, ICLR 2024</div>
-<div><b>Workshop Reviewer</b>: ACL SRW 2024, ENLSP 2024, KnowledgeNLP 2025</div>
-
-<!-- ### Small image
-
-![Octocat](https://github.githubassets.com/images/icons/emoji/octocat.png)
-
-### Large image
-
-![Branching](https://guides.github.com/activities/hello-world/branching.png) -->
