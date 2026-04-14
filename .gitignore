@@ -1,2 +1,5 @@
 .env
 .claude/
+.DS_Store
+_site/
+.jekyll-cache/
