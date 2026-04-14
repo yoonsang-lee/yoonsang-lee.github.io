@@ -1,6 +1,0 @@
-{
-    "permissions": {
-        "allow": ["Bash(python3 graph_html.py)"]
-    },
-    "apiKeyHelper": "source .env && echo $ANTHROPIC_API_KEY"
-}
