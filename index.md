@@ -10,8 +10,8 @@ layout: default
       <a href="assets/pdf/cv.pdf" target="_blank" title="CV"><i class="ai ai-cv"></i></a>
       <a href="https://scholar.google.com/citations?hl=en&user=UzNbqHQAAAAJ" target="_blank" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
       <a href="https://twitter.com/yoonsang_" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-      <a href="https://github.com/lilys012" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
-      <a href="https://www.linkedin.com/in/lilys012/" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+      <a href="https://github.com/yoonsang-lee" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/yoonsangl/" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
     </nav>
   </div>
 
@@ -23,6 +23,14 @@ layout: default
 
   <div class="card card-publications">
     <span class="card-label">Publications</span>
+
+    <div class="pub">
+      <div class="pub-body">
+        <span class="pub-title">Agentic Aggregation for Parallel Scaling of Long-Horizon Agentic Tasks</span>
+        <div class="pub-meta"><b>Yoonsang Lee</b>, Howard Yen, Xi Ye, Danqi Chen</div>
+        <div class="pub-links">arXiv 2026 &nbsp;[<a href="https://arxiv.org/abs/2604.11753">paper</a>] [<a href="https://github.com/princeton-pli/AggAgent">code</a>]</div>
+      </div>
+    </div>
 
     <div class="pub">
       <div class="pub-body">
@@ -47,7 +55,7 @@ layout: default
         <span class="pub-title">AmbigDocs: Reasoning across Documents on Different Entities under the Same Name</span>
         <div class="pub-meta"><b>Yoonsang Lee</b>, Xi Ye, Eunsol Choi</div>
         <div class="pub-links">
-          COLM 2024 &nbsp;[<a href="https://openreview.net/forum?id=mkYCfO822n">paper</a>] [<a href="https://github.com/lilys012/AmbigDocs">code</a>] [<a href="https://ambigdocs.github.io">website</a>] 
+          COLM 2024 &nbsp;[<a href="https://openreview.net/forum?id=mkYCfO822n">paper</a>] [<a href="https://github.com/lilys012/AmbigDocs">code</a>] [<a href="https://ambigdocs.github.io">website</a>]
         </div>
       </div>
     </div>
@@ -90,7 +98,7 @@ layout: default
     <span class="card-label">Service</span>
     <div class="service-entry">
       <span class="service-label">Conference Reviewer</span>
-      ACL ARR 2024–2025, ICLR 2024
+      ACL ARR 2024–2025, ICLR 2025, COLM 2026
     </div>
     <div class="service-entry">
       <span class="service-label">Workshop Reviewer</span>
@@ -99,7 +107,7 @@ layout: default
   </div>
 
   <div class="card card-travel">
-    <span class="card-label">My Conference Travel Journey ✈️</span>
+    <span class="card-label">My Conference Journey ✈️</span>
     <div class="travel">
       <span>ICML 2026 🇰🇷</span>
       <span>COLM 2025 🇨🇦</span>
