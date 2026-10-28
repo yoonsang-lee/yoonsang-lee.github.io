@@ -17,8 +17,8 @@ layout: default
 
   <div class="card card-bio">
     <p>Hello! I am a Ph.D. student in Computer Science at Princeton University, advised by <a href="https://www.cs.princeton.edu/~danqic/">Danqi Chen</a>. Prior to that, I did my undergrad at Seoul National University, fortunate to be working with <a href="https://eunsol.github.io">Eunsol Choi</a>.</p>
-    <p>My research focuses on Natural Language Processing. I am interested in making large language models better utilize dynamic information at test time and acquire meaningful knowledge.</p>
-    <p style="margin-bottom:0">Recently I've been thinking about long-horizon agents, long context inference, and human-AI interaction. Feel free to reach out for collaboration!</p>
+    <p>My research focuses on Natural Language Processing. I am interested in making language model agents intelligent, reliable, and useful to daily human tasks.</p>
+    <p style="margin-bottom:0">Recently I've been thinking about long-horizon agents, recursive self improvement, and retrieval-augmented LMs. Feel free to reach out for collaboration!</p>
   </div>
 
   <div class="card card-publications">
@@ -28,7 +28,7 @@ layout: default
       <div class="pub-body">
         <span class="pub-title">Agentic Aggregation for Parallel Scaling of Long-Horizon Agentic Tasks</span>
         <div class="pub-meta"><b>Yoonsang Lee</b>, Howard Yen, Xi Ye, Danqi Chen</div>
-        <div class="pub-links">COLM 2026 &nbsp;[<a href="https://arxiv.org/abs/2604.11753">paper</a>] [<a href="https://github.com/princeton-pli/AggAgent">code</a>]</div>
+        <div class="pub-links">COLM 2026 &nbsp;[<a href="https://openreview.net/forum?id=YF0F93vRnj">paper</a>] [<a href="https://github.com/princeton-pli/AggAgent">code</a>]</div>
       </div>
     </div>
 
@@ -36,7 +36,7 @@ layout: default
       <div class="pub-body">
         <span class="pub-title">Lost in the Maze: Overcoming Context Limitations in Long-Horizon Agentic Search</span>
         <div class="pub-meta">Howard Yen, <b>Yoonsang Lee</b>, Ashwin Paranjape, Mengzhou Xia, Thejas Venkatesh, Jack Hessel, Danqi Chen, Yuhao Zhang</div>
-        <div class="pub-links">COLM 2026 &nbsp;[<a href="https://arxiv.org/abs/2510.18939">paper</a>] [<a href="https://github.com/howard-yen/SLIM">code</a>]</div>
+        <div class="pub-links">COLM 2026 &nbsp;[<a href="https://openreview.net/forum?id=k4FBtSjHa4">paper</a>] [<a href="https://github.com/howard-yen/SLIM">code</a>]</div>
       </div>
     </div>
 
@@ -106,7 +106,7 @@ layout: default
     <span class="card-label">Service</span>
     <div class="service-entry">
       <span class="service-label">Conference Reviewer</span>
-      ACL ARR 2024–2025, ICLR 2025, COLM 2026
+      ACL ARR 2024–2026, ICLR 2025, COLM 2026
     </div>
     <div class="service-entry">
       <span class="service-label">Workshop Reviewer</span>
