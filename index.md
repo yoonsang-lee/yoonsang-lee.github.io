@@ -19,11 +19,13 @@ layout: default
     <p>Hello! I am a Ph.D. student in Computer Science at Princeton University, advised by <a href="https://www.cs.princeton.edu/~danqic/">Danqi Chen</a>. Prior to that, I did my undergrad at Seoul National University, fortunate to be working with <a href="https://eunsol.github.io">Eunsol Choi</a>.</p>
     <p>My research focuses on LLMs and agents. Recently, I've been working on:</p>
     <ul>
-      <li><b>Long-horizon agents</b>: building agents that operate over hundreds of steps through better tool use, long-context reasoning, and domain-specific training (<a href="https://openreview.net/forum?id=k4FBtSjHa4">SLIM</a>).</li>
+      <!-- <li><b>Long-horizon agents</b>: building agents that operate over hundreds of steps through better tool use, long-context reasoning, and domain-specific training (<a href="https://openreview.net/forum?id=k4FBtSjHa4">SLIM</a>).</li>
       <li><b>Recursive self-improvement</b>: scaling agentic systems at test time and enabling them to learn from their own trajectories and dense feedback (<a href="https://openreview.net/forum?id=YF0F93vRnj">AggAgent</a>).</li>
-      <li><b>Retrieval-augmented LMs</b>: developing models that seek real-world information beyond their training data (<a href="https://openreview.net/forum?id=mkYCfO822n">AmbigDocs</a>, <a href="https://openreview.net/forum?id=9FES5yT9v3">RARe</a>, <a href="https://aclanthology.org/2024.findings-emnlp.274/">EGG</a>).</li>
+      <li><b>Retrieval-augmented LMs</b>: developing models that seek real-world information beyond their training data (<a href="https://openreview.net/forum?id=mkYCfO822n">AmbigDocs</a>, <a href="https://openreview.net/forum?id=9FES5yT9v3">RARe</a>, <a href="https://aclanthology.org/2024.findings-emnlp.274/">EGG</a>).</li> -->
+      <li><b>Long-horizon agents</b>: Improving long-context reasoning, planning, and decision-making through test-time scaling and domain-specific training (<a href="https://openreview.net/forum?id=k4FBtSjHa4">SLIM</a>).</li>
+      <li><b>Harnesses and internalization</b>: Designing and optimizing agent workflows, and training models to internalize these behaviours (<a href="https://openreview.net/forum?id=YF0F93vRnj">AggAgent</a>).</li>
+      <li><b>Retrieval-augmented LMs</b>: Enabling models to acquire and reason over real-world information beyond their training data (<a href="https://openreview.net/forum?id=mkYCfO822n">AmbigDocs</a>, <a href="https://openreview.net/forum?id=9FES5yT9v3">RARe</a>, <a href="https://aclanthology.org/2024.findings-emnlp.274/">EGG</a>).</li>
     </ul>
-    <p>Feel free to reach out for collaboration!</p>
   </div>
 
   <div class="card card-publications">
