@@ -242,6 +242,8 @@ function audience() {
         msg.hidden = false; msg.textContent = "Could not send. Check your connection and try again.";
       }
     } });
+    const sync = () => { const ok = !!name.value.trim(); btn.disabled = !ok; btn.textContent = ok ? "Submit my guesses" : "Enter a nickname to submit"; };
+    name.addEventListener("input", sync); sync();
     app.append(btn, msg);
     // If the speaker reveals while this person is still editing, show the results.
     watchReveal(results);
