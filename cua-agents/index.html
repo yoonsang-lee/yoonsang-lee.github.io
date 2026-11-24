@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Easy or Hard? Eight OSWorld 2.0 Tasks</title>
+<style>
+  :root { --ink:#111; --soft:#555; --line:#c4c4c4; --blue:#1f5fbf; --red:#c0392b; --cream:#fbf1d0; --bg:#fff; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:Charter,'Charis SIL',Georgia,serif; line-height:1.45; }
+  main { max-width:760px; margin:0 auto; padding:24px 16px 72px; }
+  body.host main { max-width:1280px; }
+  h1 { font-size:1.7rem; font-weight:400; text-align:center; margin:8px 0 6px; text-wrap:balance; }
+  h2 { font-size:1.2rem; margin:0 0 8px; }
+  .lead { text-align:center; color:var(--soft); margin:0 0 22px; }
+  .card { border:2px solid var(--line); border-radius:12px; padding:16px; margin-bottom:16px; }
+  .tag { display:inline-block; background:#ececec; border-radius:6px; padding:2px 10px; font-size:.9rem; }
+  .task img { width:100%; height:auto; border:1px solid #999; border-radius:6px; margin-top:10px; display:block; }
+  .task p { margin:10px 0; }
+  .cap { font-size:.85rem; color:var(--soft); margin:4px 0 10px; }
+  .slider { display:flex; align-items:center; gap:12px; }
+  .slider input { flex:1; accent-color:var(--blue); height:32px; }
+  .slider output { width:64px; text-align:right; font-size:1.3rem; font-variant-numeric:tabular-nums; }
+  input[type=text] { font:inherit; width:100%; padding:12px; border:2px solid var(--line); border-radius:8px; }
+  button { font:inherit; cursor:pointer; }
+  .primary { display:block; width:100%; font-size:1.1rem; padding:14px; border:0; border-radius:10px; background:var(--blue); color:#fff; }
+  .primary:disabled { background:#9db4d8; cursor:not-allowed; }
+  .ghost { padding:8px 14px; border:2px solid var(--line); border-radius:8px; background:#fff; color:var(--ink); }
+  .notice { border:2px solid #e5d291; background:var(--cream); border-radius:12px; padding:16px; text-align:center; margin:16px 0; }
+  .count { font-size:5rem; line-height:1; text-align:center; font-variant-numeric:tabular-nums; }
+  .names { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:14px 0; }
+  .names span { background:#ececec; border-radius:999px; padding:2px 12px; font-size:.95rem; }
+  .bar { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:16px 0; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(420px,1fr)); gap:16px; }
+  svg { width:100%; height:auto; display:block; }
+  .legend { display:flex; flex-wrap:wrap; gap:6px 16px; justify-content:center; font-size:.95rem; margin:10px 0 16px; }
+  .legend i { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:6px; vertical-align:-1px; }
+  .row { display:flex; justify-content:space-between; gap:12px; font-size:.95rem; }
+  ol { margin:0; padding-left:22px; }
+  .note { font-size:.9rem; color:var(--soft); text-align:center; margin-top:20px; }
+  a { color:var(--blue); }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<main id="app"></main>
+
+<script>
+/* ------------------------------------------------------------------ *
+ *  SETTINGS — edit these three lines before the talk
+ * ------------------------------------------------------------------ */
+// Firebase Realtime Database URL, e.g. "https://my-project-default-rtdb.firebaseio.com"
+// Leave empty to try the page on one computer only (votes stay in this browser).
+const DB_URL   = "";
+// A name for this run of the poll. Change it to start from zero for another talk.
+const SESSION  = "cua-talk";
+// Open the page as  index.html?host=THIS_KEY  to get the presenter view.
+const HOST_KEY = "bafb74f9";
+
+/* ------------------------------------------------------------------ *
+ *  DATA — from the OSWorld 2.0 task showcase (scores are rubric %, one run each)
+ * ------------------------------------------------------------------ */
+const MODELS = [
+  { id:"gpt55",  name:"GPT-5.5",               color:"#1f5fbf" },
+  { id:"opus47", name:"Claude Opus 4.7",       color:"#c0392b" },
+  { id:"s46max", name:"Claude Sonnet 4.6 Max", color:"#b85c00" },
+  { id:"s46",    name:"Claude Sonnet 4.6",     color:"#e8a23d" },
+  { id:"qwen37", name:"Qwen 3.7-Plus",         color:"#2e7d32" },
+  { id:"mm3",    name:"MiniMax M3",            color:"#7a5cc0" }
+];
+const REF = "gpt55"; // the "real number" each guess is compared against
+const TASKS = [
+  { n:1, id:"004", name:"Slide formatting",  text:"Restyle only the newly added slides so their footer, fonts and alignment match the rest of the deck.",
+    s:{gpt55:68.3, opus47:80,   s46max:73.3, s46:34.4, qwen37:0,    mm3:20} },
+  { n:2, id:"008", name:"Expense claim",     text:"File a conference reimbursement in Oracle, using receipts in Gmail, bank charges and files on the Desktop.",
+    s:{gpt55:46.3, opus47:76.3, s46max:77.2, s46:5,    qwen37:31.5, mm3:10.5} },
+  { n:3, id:"024", name:"DS-2019 visa",      text:"Fill out a J-1 visa application from documents on the Desktop. Review everything before submitting.",
+    s:{gpt55:0,    opus47:49.5, s46max:24.5, s46:24.5, qwen37:24.5, mm3:0} },
+  { n:4, id:"035", name:"Purchase requests", text:"Decide which purchase requests to approve, from a manager's rules in Slack and later DM clarifications.",
+    s:{gpt55:0,    opus47:50,   s46max:0,    s46:0,    qwen37:50,   mm3:0} },
+  { n:5, id:"052", name:"Hotel booking",     text:"Open a Paris hotel's booking page and select the Deluxe Suite. The user will enter personal details.",
+    s:{gpt55:100,  opus47:100,  s46max:0,    s46:0,    qwen37:0,    mm3:0} },
+  { n:6, id:"053", name:"Video masking",     text:"Black out every spider in a game video and export it at the same length.",
+    s:{gpt55:18.3, opus47:69.1, s46max:10,   s46:10,   qwen37:69.3, mm3:10} },
+  { n:7, id:"098", name:"DS-160 visa form",  text:"Complete a DS-160 form from a passport image, a PDF and a Word file, following an online guide.",
+    s:{gpt55:29.6, opus47:63,   s46max:55.6, s46:66.7, qwen37:0,    mm3:0} },
+  { n:8, id:"103", name:"FreeCAD bracket",   text:"Recreate a mechanical part in FreeCAD from a PDF drawing and a reference photo. Save it as a STEP file.",
+    s:{gpt55:35,   opus47:35,   s46max:0,    s46:25,   qwen37:23.8, mm3:0} }
+];
+
+/* ------------------------------------------------------------------ *
+ *  STORE — Firebase REST when DB_URL is set, this browser otherwise
+ * ------------------------------------------------------------------ */
+const base = DB_URL ? DB_URL.replace(/\/+$/,"") + "/polls/" + encodeURIComponent(SESSION) : null;
+const LKEY = "cuapoll:" + SESSION;
+const local = {
+  read() { try { return JSON.parse(localStorage.getItem(LKEY)) || {}; } catch (e) { return {}; } },
+  write(d) { try { localStorage.setItem(LKEY, JSON.stringify(d)); } catch (e) {} }
+};
+const store = {
+  async get() { // -> { votes:{id:{name,g}}, revealed:bool }
+    if (!base) return local.read();
+    const r = await fetch(base + ".json", { cache:"no-store" });
+    if (!r.ok) throw new Error("read failed");
+    return (await r.json()) || {};
+  },
+  async vote(id, v) {
+    if (!base) { const d = local.read(); (d.votes = d.votes || {})[id] = v; local.write(d); return; }
+    const r = await fetch(base + "/votes/" + id + ".json", { method:"PUT", body:JSON.stringify(v) });
+    if (!r.ok) throw new Error("write failed");
+  },
+  async setRevealed(x) {
+    if (!base) { const d = local.read(); d.revealed = x; local.write(d); return; }
+    await fetch(base + "/revealed.json", { method:"PUT", body:JSON.stringify(x) });
+  },
+  async reset() {
+    if (!base) { local.write({}); return; }
+    await fetch(base + ".json", { method:"DELETE" });
+  }
+};
+
+/* ------------------------------------------------------------------ *
+ *  HELPERS
+ * ------------------------------------------------------------------ */
+const app = document.getElementById("app");
+const el = (tag, attrs, ...kids) => {
+  const e = document.createElement(tag);
+  for (const k in (attrs || {})) {
+    if (k === "class") e.className = attrs[k];
+    else if (k === "text") e.textContent = attrs[k];
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), attrs[k]);
+    else e.setAttribute(k, attrs[k]);
+  }
+  for (const kid of kids) if (kid != null) e.append(kid);
+  return e;
+};
+const mean = (a) => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
+const votesOf = (d) => Object.values((d && d.votes) || {}).filter((v) => v && Array.isArray(v.g) && v.g.length === TASKS.length);
+const myId = (() => {
+  try {
+    let id = localStorage.getItem(LKEY + ":me");
+    if (!id) { id = "u" + Math.random().toString(36).slice(2, 12); localStorage.setItem(LKEY + ":me", id); }
+    return id;
+  } catch (e) { return "u" + Math.random().toString(36).slice(2, 12); }
+})();
+
+// One chart: 0–100 axis, room guesses as dots, room mean, model scores as markers.
+function chart(task, guesses, showModels, mine) {
+  const W = 520, H = 150, L = 16, R = 16, y0 = 96, x = (v) => L + (W - L - R) * v / 100;
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", task.name + ": guesses and model scores from 0 to 100 percent");
+  const add = (tag, a, txt) => { const n = document.createElementNS(ns, tag); for (const k in a) n.setAttribute(k, a[k]); if (txt != null) n.textContent = txt; svg.append(n); return n; };
+  add("line", { x1:x(0), y1:y0, x2:x(100), y2:y0, stroke:"#888", "stroke-width":2 });
+  for (const t of [0, 25, 50, 75, 100]) {
+    add("line", { x1:x(t), y1:y0 - 5, x2:x(t), y2:y0 + 5, stroke:"#888", "stroke-width":2 });
+    add("text", { x:x(t), y:y0 + 24, "text-anchor":"middle", "font-size":13, fill:"#555" }, t + "%");
+  }
+  // room guesses, stacked upward in 5-point bins
+  const bins = {};
+  for (const g of guesses) { const b = Math.round(g / 5) * 5; bins[b] = (bins[b] || 0) + 1; }
+  const maxStack = Math.max(1, ...Object.values(bins));
+  const dy = Math.min(9, 60 / maxStack);
+  for (const b in bins) for (let i = 0; i < bins[b]; i++)
+    add("circle", { cx:x(+b), cy:y0 - 10 - i * dy, r:4, fill:"#111", opacity:.35 });
+  if (guesses.length) {
+    const m = mean(guesses);
+    add("line", { x1:x(m), y1:y0 - 76, x2:x(m), y2:y0 + 6, stroke:"#111", "stroke-width":2, "stroke-dasharray":"5 4" });
+    add("text", { x:x(m), y:14, "text-anchor": m > 85 ? "end" : m < 15 ? "start" : "middle", "font-size":13, fill:"#111" }, "room " + Math.round(m) + "%");
+  }
+  if (mine != null) add("path", { d:"M" + x(mine) + " " + (y0 - 8) + " l-6 -11 h12 z", fill:"#111" });
+  // model scores below the axis
+  const shown = MODELS.filter((m) => showModels.includes(m.id));
+  shown.forEach((m, i) => {
+    const v = task.s[m.id];
+    add("circle", { cx:x(v), cy:y0 + 36 + (i % 2) * 12, r:6, fill:m.color, stroke:"#fff", "stroke-width":1.5 });
+  });
+  return svg;
+}
+function legend(ids) {
+  const box = el("div", { class:"legend" });
+  box.append(el("span", {}, el("i", { style:"background:#111;opacity:.35" }), "one guess"));
+  for (const m of MODELS.filter((m) => ids.includes(m.id))) box.append(el("span", {}, el("i", { style:"background:" + m.color }), m.name));
+  return box;
+}
+
+/* ------------------------------------------------------------------ *
+ *  AUDIENCE VIEW
+ * ------------------------------------------------------------------ */
+function audience() {
+  let submitted = null; try { submitted = JSON.parse(localStorage.getItem(LKEY + ":sent")); } catch (e) {}
+  const guesses = TASKS.map(() => 50);
+
+  function form() {
+    app.replaceChildren(
+      el("h1", { text:"Easy or Hard?" }),
+      el("p", { class:"lead", text:"Eight real tasks from OSWorld 2.0. For each one, guess the score a current top agent (" + MODELS.find((m) => m.id === REF).name + ") gets, from 0% to 100%." })
+    );
+    const name = el("input", { type:"text", maxlength:"20", placeholder:"Your nickname", "aria-label":"Your nickname", autocomplete:"off" });
+    app.append(el("div", { class:"card" }, el("h2", { text:"Nickname" }), name));
+    TASKS.forEach((t, i) => {
+      const out = el("output", { text:"50%" });
+      const range = el("input", { type:"range", min:"0", max:"100", step:"5", value:"50", "aria-label":"Your guess for " + t.name,
+        oninput:(e) => { guesses[i] = +e.target.value; out.textContent = e.target.value + "%"; } });
+      app.append(el("section", { class:"card task" },
+        el("span", { class:"tag", text:t.n + " · " + t.name }),
+        el("p", { text:t.text }),
+        el("img", { src:"img/" + t.id + ".jpg", alt:"The screen as the task starts: " + t.name, loading:"lazy", width:"1100", height:"618" }),
+        el("p", { class:"cap", text:"The screen as the task starts" }),
+        el("div", { class:"slider" }, range, out)
+      ));
+    });
+    const msg = el("p", { class:"note", hidden:"" });
+    const btn = el("button", { class:"primary", text:"Submit my guesses", onclick:async () => {
+      const nick = name.value.trim().slice(0, 20);
+      if (!nick) { msg.hidden = false; msg.textContent = "Please enter a nickname first."; name.focus(); return; }
+      btn.disabled = true; btn.textContent = "Sending…";
+      try {
+        await store.vote(myId, { name:nick, g:guesses.slice(), t:Date.now() });
+        submitted = { name:nick, g:guesses.slice() };
+        try { localStorage.setItem(LKEY + ":sent", JSON.stringify(submitted)); } catch (e) {}
+        waiting();
+      } catch (e) {
+        btn.disabled = false; btn.textContent = "Submit my guesses";
+        msg.hidden = false; msg.textContent = "Could not send. Check your connection and try again.";
+      }
+    } });
+    app.append(btn, msg);
+  }
+
+  let timer = null;
+  function waiting() {
+    app.replaceChildren(
+      el("h1", { text:"Thanks, " + submitted.name + "!" }),
+      el("div", { class:"notice" }, el("p", { text:"Your guesses are in. The results appear here when the speaker reveals them." })),
+      el("div", { class:"bar" }, el("button", { class:"ghost", text:"Change my guesses", onclick:() => { clearInterval(timer); form(); } }))
+    );
+    const tick = async () => { try { const d = await store.get(); if (d.revealed) { clearInterval(timer); results(d); } } catch (e) {} };
+    clearInterval(timer); timer = setInterval(tick, 3000); tick();
+  }
+
+  function results(d) {
+    const all = votesOf(d);
+    const err = mean(TASKS.map((t, i) => Math.abs(submitted.g[i] - t.s[REF])));
+    app.replaceChildren(
+      el("h1", { text:"The results" }),
+      el("div", { class:"notice" }, el("p", { text:"On average you were " + Math.round(err) + " points away from " + MODELS.find((m) => m.id === REF).name + "'s real score." })),
+      legend(MODELS.map((m) => m.id))
+    );
+    TASKS.forEach((t, i) => app.append(el("section", { class:"card" },
+      el("div", { class:"row" }, el("b", { text:t.n + " · " + t.name }), el("span", { text:"you " + submitted.g[i] + "% · real " + Math.round(t.s[REF]) + "%" })),
+      chart(t, all.map((v) => v.g[i]), MODELS.map((m) => m.id), submitted.g[i])
+    )));
+    app.append(source());
+  }
+
+  if (submitted) waiting(); else form();
+}
+
+function source() {
+  const p = el("p", { class:"note" }, "Scores are rubric-based partial credit, one run per model, from the ");
+  p.append(el("a", { href:"https://osworld-v2.xlang.ai/task-showcase/", target:"_blank", rel:"noopener", text:"OSWorld 2.0 task showcase" }), ", where you can replay every step.");
+  return p;
+}
+
+/* ------------------------------------------------------------------ *
+ *  HOST VIEW
+ * ------------------------------------------------------------------ */
+function host() {
+  document.body.classList.add("host");
+  let showAll = false, timer = null;
+
+  async function lobby() {
+    const count = el("div", { class:"count", text:"0" });
+    const names = el("div", { class:"names" });
+    const status = el("p", { class:"note", text: base ? "Live: counting submissions every 2 seconds." : "Test mode: DB_URL is empty, so only votes from this browser are counted." });
+    app.replaceChildren(
+      el("h1", { text:"Easy or Hard? — presenter view" }),
+      count, el("p", { class:"lead", text:"people have submitted" }), names,
+      el("div", { class:"bar" },
+        el("button", { class:"primary", style:"width:auto;padding:14px 40px", text:"Reveal the results", onclick:async () => { clearInterval(timer); await store.setRevealed(true); results(); } }),
+        el("button", { class:"ghost", text:"Reset this poll", onclick:async () => { if (resetArmed) { await store.reset(); resetArmed = false; resetBtnText(); } else { resetArmed = true; resetBtnText(); } } })
+      ),
+      status
+    );
+    let resetArmed = false;
+    const resetBtn = app.querySelectorAll(".ghost")[0];
+    const resetBtnText = () => { resetBtn.textContent = resetArmed ? "Click again to delete all votes" : "Reset this poll"; };
+    const tick = async () => {
+      try {
+        const d = await store.get(); const v = votesOf(d);
+        count.textContent = v.length;
+        names.replaceChildren(...v.sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 60).map((x) => el("span", { text:String(x.name).slice(0, 20) })));
+      } catch (e) { status.textContent = "Cannot reach the database. Check DB_URL and its rules."; }
+    };
+    clearInterval(timer); timer = setInterval(tick, 2000); tick();
+  }
+
+  async function results() {
+    let d = {}; try { d = await store.get(); } catch (e) {}
+    const all = votesOf(d);
+    const ids = showAll ? MODELS.map((m) => m.id) : [REF];
+    const board = all.map((v) => ({ name:String(v.name).slice(0, 20), err:mean(TASKS.map((t, i) => Math.abs(v.g[i] - t.s[REF]))) })).sort((a, b) => a.err - b.err).slice(0, 5);
+    const grid = el("div", { class:"grid" });
+    TASKS.forEach((t, i) => {
+      const g = all.map((v) => v.g[i]);
+      grid.append(el("section", { class:"card" },
+        el("div", { class:"row" }, el("b", { text:t.n + " · " + t.name }),
+          el("span", { text:"room " + (g.length ? Math.round(mean(g)) + "%" : "–") + " · " + MODELS.find((m) => m.id === REF).name + " " + Math.round(t.s[REF]) + "%" })),
+        chart(t, g, ids, null)
+      ));
+    });
+    const list = el("ol");
+    board.forEach((b) => list.append(el("li", { text:b.name + " — " + Math.round(b.err) + " points off on average" })));
+    app.replaceChildren(
+      el("h1", { text:"The room vs the real scores" }),
+      el("p", { class:"lead", text:all.length + " people guessed. Dots are guesses, the dashed line is the room's average." }),
+      el("div", { class:"bar" },
+        el("button", { class:"primary", style:"width:auto;padding:10px 28px", text: showAll ? "Show " + MODELS.find((m) => m.id === REF).name + " only" : "Show all six models", onclick:() => { showAll = !showAll; results(); } }),
+        el("button", { class:"ghost", text:"Refresh", onclick:results }),
+        el("button", { class:"ghost", text:"Back to counter (hide results)", onclick:async () => { await store.setRevealed(false); lobby(); } })
+      ),
+      legend(ids), grid,
+      el("section", { class:"card", style:"margin-top:16px" }, el("h2", { text:"Closest guessers" }), board.length ? list : el("p", { text:"No guesses yet." })),
+      source()
+    );
+  }
+
+  store.get().then((d) => (d.revealed ? results() : lobby())).catch(lobby);
+}
+
+/* ------------------------------------------------------------------ */
+const hostParam = new URLSearchParams(location.search).get("host");
+if (hostParam !== null && hostParam === HOST_KEY) host(); else audience();
+</script>
+</body>
+</html>
