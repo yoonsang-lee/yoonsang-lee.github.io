@@ -224,16 +224,13 @@ function audience() {
     return range;
   });
   const status = el("div", { class:"notice", hidden:"" });
-  const count = el("b", { text:"…" });
-  const names = el("div", { class:"names" });
-  const room = el("div", { hidden:"" }, el("p", { class:"lead" }, count, " submitted so far"), names);
   const msg = el("p", { class:"note", hidden:"" });
   const btn = el("button", { class:"primary" });
-  app.append(status, btn, msg, room);
+  app.append(status, btn, msg);
 
   function render() {
     name.disabled = locked; ranges.forEach((r) => (r.disabled = locked));
-    status.hidden = !locked; room.hidden = !locked;
+    status.hidden = !locked;
     if (locked) status.replaceChildren(el("p", { text:"Locked in, " + submitted.name + ". The results appear here when the speaker reveals them." }));
     const hasName = !!name.value.trim();
     btn.disabled = busy || (!locked && !hasName);
@@ -270,9 +267,6 @@ function audience() {
       if (locked && !busy && !(d.votes && d.votes[myId])) {   // the speaker reset the poll
         submitted = null; save(":sent", null); locked = false; render();
       }
-      const v = votesOf(d);
-      count.textContent = v.length;
-      names.replaceChildren(...v.sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 80).map((x) => el("span", { text:String(x.name).slice(0, 20) })));
     } catch (e) {}
   }
 
