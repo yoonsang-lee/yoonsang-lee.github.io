@@ -33,6 +33,11 @@
   .bar { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:16px 0; }
   .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(420px,1fr)); gap:16px; }
   svg { width:100%; height:auto; display:block; }
+  .podium { display:flex; flex-wrap:wrap; gap:16px; justify-content:center; margin:8px 0 20px; }
+  .medal { display:flex; align-items:center; gap:14px; border:3px solid; border-radius:14px; padding:12px 20px; min-width:260px; }
+  .medal .disc { width:52px; height:52px; border-radius:50%; color:#fff; font-size:1.6rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex:none; }
+  .medal b { font-size:1.4rem; }
+  .medal p { margin:0; color:var(--soft); font-size:.95rem; }
   .legend { display:flex; flex-wrap:wrap; gap:6px 16px; justify-content:center; font-size:.95rem; margin:10px 0 16px; }
   .legend i { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:6px; vertical-align:-1px; }
   .row { display:flex; justify-content:space-between; gap:12px; font-size:.95rem; }
@@ -306,7 +311,7 @@ function source() {
  * ------------------------------------------------------------------ */
 function host() {
   document.body.classList.add("host");
-  let showAll = false, timer = null;
+  let timer = null;
 
   async function lobby() {
     const count = el("div", { class:"count", text:"0" });
@@ -337,29 +342,34 @@ function host() {
   async function results() {
     let d = {}; try { d = await store.get(); } catch (e) {}
     const all = votesOf(d);
-    const ids = showAll ? MODELS.map((m) => m.id) : [REF];
-    const board = all.map((v) => ({ name:String(v.name).slice(0, 20), err:mean(TASKS.map((t, i) => Math.abs(v.g[i] - t.s[REF]))) })).sort((a, b) => a.err - b.err).slice(0, 5);
+    const ids = MODELS.map((m) => m.id);
+    const refName = MODELS.find((m) => m.id === REF).name;
+    const board = all.map((v) => ({ name:String(v.name).slice(0, 20), err:mean(TASKS.map((t, i) => Math.abs(v.g[i] - t.s[REF]))) })).sort((a, b) => a.err - b.err).slice(0, 3);
+    const medals = [ { label:"Gold", color:"#d4a017" }, { label:"Silver", color:"#9aa0a6" }, { label:"Bronze", color:"#b0703c" } ];
+    const podium = el("div", { class:"podium" });
+    board.forEach((b, k) => podium.append(el("div", { class:"medal", style:"border-color:" + medals[k].color },
+      el("span", { class:"disc", style:"background:" + medals[k].color, text:String(k + 1) }),
+      el("div", {}, el("b", { text:b.name }), el("p", { text:medals[k].label + " · " + Math.round(b.err) + " points off on average" }))
+    )));
     const grid = el("div", { class:"grid" });
     TASKS.forEach((t, i) => {
       const g = all.map((v) => v.g[i]);
       grid.append(el("section", { class:"card" },
         el("div", { class:"row" }, el("b", { text:t.n + " · " + t.name }),
-          el("span", { text:"room " + (g.length ? Math.round(mean(g)) + "%" : "–") + " · " + MODELS.find((m) => m.id === REF).name + " " + Math.round(t.s[REF]) + "%" })),
+          el("span", { text:"room " + (g.length ? Math.round(mean(g)) + "%" : "–") + " · " + refName + " " + Math.round(t.s[REF]) + "%" })),
         chart(t, g, ids, null)
       ));
     });
-    const list = el("ol");
-    board.forEach((b) => list.append(el("li", { text:b.name + " — " + Math.round(b.err) + " points off on average" })));
     app.replaceChildren(
       el("h1", { text:"The room vs the real scores" }),
+      el("p", { class:"lead", text:"Closest to " + refName + " across all eight tasks" }),
+      board.length ? podium : el("p", { class:"lead", text:"No guesses yet." }),
       el("p", { class:"lead", text:all.length + " people guessed. Dots are guesses, the dashed line is the room's average." }),
+      legend(ids), grid,
       el("div", { class:"bar" },
-        el("button", { class:"primary", style:"width:auto;padding:10px 28px", text: showAll ? "Show " + MODELS.find((m) => m.id === REF).name + " only" : "Show all six models", onclick:() => { showAll = !showAll; results(); } }),
         el("button", { class:"ghost", text:"Refresh", onclick:results }),
         el("button", { class:"ghost", text:"Back to counter (hide results)", onclick:async () => { await store.setRevealed(false); lobby(); } })
       ),
-      legend(ids), grid,
-      el("section", { class:"card", style:"margin-top:16px" }, el("h2", { text:"Closest guessers" }), board.length ? list : el("p", { text:"No guesses yet." })),
       source()
     );
   }
