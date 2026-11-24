@@ -109,6 +109,11 @@ const store = {
     const r = await fetch(base + "/votes/" + id + ".json", { method:"PUT", body:JSON.stringify(v) });
     if (!r.ok) throw new Error("write failed");
   },
+  async unvote(id) {
+    if (!base) { const d = local.read(); if (d.votes) delete d.votes[id]; local.write(d); return; }
+    const r = await fetch(base + "/votes/" + id + ".json", { method:"DELETE" });
+    if (!r.ok) throw new Error("write failed");
+  },
   async setRevealed(x) {
     if (!base) { const d = local.read(); d.revealed = x; local.write(d); return; }
     await fetch(base + "/revealed.json", { method:"PUT", body:JSON.stringify(x) });
@@ -191,7 +196,13 @@ function legend(ids) {
  * ------------------------------------------------------------------ */
 function audience() {
   let submitted = null; try { submitted = JSON.parse(localStorage.getItem(LKEY + ":sent")); } catch (e) {}
-  const guesses = TASKS.map(() => 50);
+  let draft = null; try { draft = JSON.parse(localStorage.getItem(LKEY + ":draft")); } catch (e) {}
+  const guesses = (draft && Array.isArray(draft.g) && draft.g.length === TASKS.length) ? draft.g.slice() : TASKS.map(() => 50);
+  let timer = null;
+  const watchReveal = (onReveal) => {
+    const tick = async () => { try { const d = await store.get(); if (d.revealed) { clearInterval(timer); onReveal(d); } } catch (e) {} };
+    clearInterval(timer); timer = setInterval(tick, 3000); tick();
+  };
 
   function form() {
     app.replaceChildren(
@@ -199,10 +210,11 @@ function audience() {
       el("p", { class:"lead", text:"Eight real tasks from OSWorld 2.0. For each one, guess the score a current top agent (" + MODELS.find((m) => m.id === REF).name + ") gets, from 0% to 100%." })
     );
     const name = el("input", { type:"text", maxlength:"20", placeholder:"Your nickname", "aria-label":"Your nickname", autocomplete:"off" });
+    if (draft && draft.name) name.value = draft.name;
     app.append(el("div", { class:"card" }, el("h2", { text:"Nickname" }), name));
     TASKS.forEach((t, i) => {
-      const out = el("output", { text:"50%" });
-      const range = el("input", { type:"range", min:"0", max:"100", step:"5", value:"50", "aria-label":"Your guess for " + t.name,
+      const out = el("output", { text:guesses[i] + "%" });
+      const range = el("input", { type:"range", min:"0", max:"100", step:"5", value:String(guesses[i]), "aria-label":"Your guess for " + t.name,
         oninput:(e) => { guesses[i] = +e.target.value; out.textContent = e.target.value + "%"; } });
       app.append(el("section", { class:"card task" },
         el("span", { class:"tag", text:t.n + " · " + t.name }),
@@ -218,9 +230,12 @@ function audience() {
       if (!nick) { msg.hidden = false; msg.textContent = "Please enter a nickname first."; name.focus(); return; }
       btn.disabled = true; btn.textContent = "Sending…";
       try {
+        const now = await store.get();
+        if (now.revealed) { clearInterval(timer); results(now); return; }
         await store.vote(myId, { name:nick, g:guesses.slice(), t:Date.now() });
         submitted = { name:nick, g:guesses.slice() };
-        try { localStorage.setItem(LKEY + ":sent", JSON.stringify(submitted)); } catch (e) {}
+        draft = submitted;
+        try { localStorage.setItem(LKEY + ":sent", JSON.stringify(submitted)); localStorage.setItem(LKEY + ":draft", JSON.stringify(draft)); } catch (e) {}
         waiting();
       } catch (e) {
         btn.disabled = false; btn.textContent = "Submit my guesses";
@@ -228,30 +243,63 @@ function audience() {
       }
     } });
     app.append(btn, msg);
+    // If the speaker reveals while this person is still editing, show the results.
+    watchReveal(results);
   }
 
-  let timer = null;
   function waiting() {
+    const count = el("b", { text:"…" });
+    const names = el("div", { class:"names" });
+    const unlockMsg = el("p", { class:"note", hidden:"" });
+    const unlock = el("button", { class:"ghost", text:"Unlock and change my guesses", onclick:async () => {
+      unlock.disabled = true;
+      try {
+        const now = await store.get();
+        if (now.revealed) { clearInterval(timer); results(now); return; }
+        await store.unvote(myId);           // the speaker's counter goes down by one
+        submitted = null;
+        try { localStorage.removeItem(LKEY + ":sent"); } catch (e) {}
+        clearInterval(timer); form();
+      } catch (e) { unlock.disabled = false; unlockMsg.hidden = false; unlockMsg.textContent = "Could not unlock. Check your connection and try again."; }
+    } });
     app.replaceChildren(
       el("h1", { text:"Thanks, " + submitted.name + "!" }),
-      el("div", { class:"notice" }, el("p", { text:"Your guesses are in. The results appear here when the speaker reveals them." })),
-      el("div", { class:"bar" }, el("button", { class:"ghost", text:"Change my guesses", onclick:() => { clearInterval(timer); form(); } }))
+      el("div", { class:"notice" }, el("p", { text:"Your guesses are locked in. The results appear here when the speaker reveals them." })),
+      el("div", { class:"bar" }, unlock), unlockMsg,
+      el("p", { class:"lead" }, count, " submitted so far"), names
     );
-    const tick = async () => { try { const d = await store.get(); if (d.revealed) { clearInterval(timer); results(d); } } catch (e) {} };
+    const tick = async () => {
+      try {
+        const d = await store.get();
+        if (d.revealed) { clearInterval(timer); results(d); return; }
+        if (!(d.votes && d.votes[myId])) {   // the speaker reset the poll: back to the form
+          submitted = null; try { localStorage.removeItem(LKEY + ":sent"); } catch (e) {}
+          clearInterval(timer); form(); return;
+        }
+        const v = votesOf(d);
+        count.textContent = v.length;
+        names.replaceChildren(...v.sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 80).map((x) => el("span", { text:String(x.name).slice(0, 20) })));
+      } catch (e) {}
+    };
     clearInterval(timer); timer = setInterval(tick, 3000); tick();
   }
 
   function results(d) {
     const all = votesOf(d);
-    const err = mean(TASKS.map((t, i) => Math.abs(submitted.g[i] - t.s[REF])));
+    const mine = submitted ? submitted.g : null;
+    const refName = MODELS.find((m) => m.id === REF).name;
+    const note = mine
+      ? "On average you were " + Math.round(mean(TASKS.map((t, i) => Math.abs(mine[i] - t.s[REF])))) + " points away from " + refName + "'s real score."
+      : "The results are out. Your guesses were not locked in, so only the room's are shown.";
     app.replaceChildren(
       el("h1", { text:"The results" }),
-      el("div", { class:"notice" }, el("p", { text:"On average you were " + Math.round(err) + " points away from " + MODELS.find((m) => m.id === REF).name + "'s real score." })),
+      el("div", { class:"notice" }, el("p", { text:note })),
       legend(MODELS.map((m) => m.id))
     );
     TASKS.forEach((t, i) => app.append(el("section", { class:"card" },
-      el("div", { class:"row" }, el("b", { text:t.n + " · " + t.name }), el("span", { text:"you " + submitted.g[i] + "% · real " + Math.round(t.s[REF]) + "%" })),
-      chart(t, all.map((v) => v.g[i]), MODELS.map((m) => m.id), submitted.g[i])
+      el("div", { class:"row" }, el("b", { text:t.n + " · " + t.name }),
+        el("span", { text:(mine ? "you " + mine[i] + "% · " : "") + "real " + Math.round(t.s[REF]) + "%" })),
+      chart(t, all.map((v) => v.g[i]), MODELS.map((m) => m.id), mine ? mine[i] : null)
     )));
     app.append(source());
   }
@@ -292,7 +340,7 @@ function host() {
       try {
         const d = await store.get(); const v = votesOf(d);
         count.textContent = v.length;
-        names.replaceChildren(...v.sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 60).map((x) => el("span", { text:String(x.name).slice(0, 20) })));
+        names.replaceChildren(...v.sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 300).map((x) => el("span", { text:String(x.name).slice(0, 20) })));
       } catch (e) { status.textContent = "Cannot reach the database. Check DB_URL and its rules."; }
     };
     clearInterval(timer); timer = setInterval(tick, 2000); tick();
