@@ -197,93 +197,83 @@ function legend(ids) {
 function audience() {
   let submitted = null; try { submitted = JSON.parse(localStorage.getItem(LKEY + ":sent")); } catch (e) {}
   let draft = null; try { draft = JSON.parse(localStorage.getItem(LKEY + ":draft")); } catch (e) {}
-  const guesses = (draft && Array.isArray(draft.g) && draft.g.length === TASKS.length) ? draft.g.slice() : TASKS.map(() => 50);
-  let timer = null;
-  const watchReveal = (onReveal) => {
-    const tick = async () => { try { const d = await store.get(); if (d.revealed) { clearInterval(timer); onReveal(d); } } catch (e) {} };
-    clearInterval(timer); timer = setInterval(tick, 3000); tick();
-  };
+  const start = submitted || draft;
+  const guesses = (start && Array.isArray(start.g) && start.g.length === TASKS.length) ? start.g.slice() : TASKS.map(() => 50);
+  let locked = !!submitted, busy = false, timer = null;
+  const save = (k, v) => { try { v == null ? localStorage.removeItem(LKEY + k) : localStorage.setItem(LKEY + k, JSON.stringify(v)); } catch (e) {} };
 
-  function form() {
-    app.replaceChildren(
-      el("h1", { text:"Easy or Hard?" }),
-      el("p", { class:"lead", text:"Eight real tasks from OSWorld 2.0. For each one, guess the score a current top agent (" + MODELS.find((m) => m.id === REF).name + ") gets, from 0% to 100%." })
-    );
-    const name = el("input", { type:"text", maxlength:"20", placeholder:"Your nickname", "aria-label":"Your nickname", autocomplete:"off" });
-    if (draft && draft.name) name.value = draft.name;
-    app.append(el("div", { class:"card" }, el("h2", { text:"Nickname" }), name));
-    TASKS.forEach((t, i) => {
-      const out = el("output", { text:guesses[i] + "%" });
-      const range = el("input", { type:"range", min:"0", max:"100", step:"5", value:String(guesses[i]), "aria-label":"Your guess for " + t.name,
-        oninput:(e) => { guesses[i] = +e.target.value; out.textContent = e.target.value + "%"; } });
-      app.append(el("section", { class:"card task" },
-        el("span", { class:"tag", text:t.n + " · " + t.name }),
-        el("p", { text:t.text }),
-        el("img", { src:"img/" + t.id + ".jpg", alt:"The screen as the task starts: " + t.name, loading:"lazy", width:"1100", height:"618" }),
-        el("p", { class:"cap", text:"The screen as the task starts" }),
-        el("div", { class:"slider" }, range, out)
-      ));
-    });
-    const msg = el("p", { class:"note", hidden:"" });
-    const btn = el("button", { class:"primary", text:"Submit my guesses", onclick:async () => {
-      const nick = name.value.trim().slice(0, 20);
-      if (!nick) { msg.hidden = false; msg.textContent = "Please enter a nickname first."; name.focus(); return; }
-      btn.disabled = true; btn.textContent = "Sending…";
-      try {
-        const now = await store.get();
-        if (now.revealed) { clearInterval(timer); results(now); return; }
+  // One page for the whole time: the form stays, and the button locks or unlocks it.
+  app.replaceChildren(
+    el("h1", { text:"Easy or Hard?" }),
+    el("p", { class:"lead", text:"Eight real tasks from OSWorld 2.0. For each one, guess the score a current top agent (" + MODELS.find((m) => m.id === REF).name + ") gets, from 0% to 100%." })
+  );
+  const name = el("input", { type:"text", maxlength:"20", placeholder:"Your nickname", "aria-label":"Your nickname", autocomplete:"off" });
+  if (start && start.name) name.value = start.name;
+  app.append(el("div", { class:"card" }, el("h2", { text:"Nickname" }), name));
+  const ranges = TASKS.map((t, i) => {
+    const out = el("output", { text:guesses[i] + "%" });
+    const range = el("input", { type:"range", min:"0", max:"100", step:"5", value:String(guesses[i]), "aria-label":"Your guess for " + t.name,
+      oninput:(e) => { guesses[i] = +e.target.value; out.textContent = e.target.value + "%"; } });
+    app.append(el("section", { class:"card task" },
+      el("span", { class:"tag", text:t.n + " · " + t.name }),
+      el("p", { text:t.text }),
+      el("img", { src:"img/" + t.id + ".jpg", alt:"The screen as the task starts: " + t.name, loading:"lazy", width:"1100", height:"618" }),
+      el("p", { class:"cap", text:"The screen as the task starts" }),
+      el("div", { class:"slider" }, range, out)
+    ));
+    return range;
+  });
+  const status = el("div", { class:"notice", hidden:"" });
+  const count = el("b", { text:"…" });
+  const names = el("div", { class:"names" });
+  const room = el("div", { hidden:"" }, el("p", { class:"lead" }, count, " submitted so far"), names);
+  const msg = el("p", { class:"note", hidden:"" });
+  const btn = el("button", { class:"primary" });
+  app.append(status, btn, msg, room);
+
+  function render() {
+    name.disabled = locked; ranges.forEach((r) => (r.disabled = locked));
+    status.hidden = !locked; room.hidden = !locked;
+    if (locked) status.replaceChildren(el("p", { text:"Locked in, " + submitted.name + ". The results appear here when the speaker reveals them." }));
+    const hasName = !!name.value.trim();
+    btn.disabled = busy || (!locked && !hasName);
+    btn.textContent = busy ? "One moment…" : locked ? "Unlock to change my guesses" : hasName ? "Submit my guesses" : "Enter a nickname to submit";
+    btn.style.background = locked ? "#555" : "";
+  }
+  const fail = (text) => { msg.hidden = false; msg.textContent = text; };
+  name.addEventListener("input", render);
+
+  btn.addEventListener("click", async () => {
+    if (busy) return;
+    busy = true; msg.hidden = true; render();
+    try {
+      const now = await store.get();
+      if (now.revealed) { clearInterval(timer); results(now); return; }
+      if (locked) {                         // unlock: the vote is withdrawn, the speaker's count drops
+        await store.unvote(myId);
+        draft = submitted; save(":draft", draft);
+        submitted = null; save(":sent", null); locked = false;
+      } else {                              // submit: lock the form in place
+        const nick = name.value.trim().slice(0, 20);
         await store.vote(myId, { name:nick, g:guesses.slice(), t:Date.now() });
         submitted = { name:nick, g:guesses.slice() };
-        draft = submitted;
-        try { localStorage.setItem(LKEY + ":sent", JSON.stringify(submitted)); localStorage.setItem(LKEY + ":draft", JSON.stringify(draft)); } catch (e) {}
-        waiting();
-      } catch (e) {
-        btn.disabled = false; btn.textContent = "Submit my guesses";
-        msg.hidden = false; msg.textContent = "Could not send. Check your connection and try again.";
+        save(":sent", submitted); save(":draft", submitted); locked = true;
       }
-    } });
-    const sync = () => { const ok = !!name.value.trim(); btn.disabled = !ok; btn.textContent = ok ? "Submit my guesses" : "Enter a nickname to submit"; };
-    name.addEventListener("input", sync); sync();
-    app.append(btn, msg);
-    // If the speaker reveals while this person is still editing, show the results.
-    watchReveal(results);
-  }
+    } catch (e) { fail("Could not reach the poll. Check your connection and try again."); }
+    busy = false; render(); tick();
+  });
 
-  function waiting() {
-    const count = el("b", { text:"…" });
-    const names = el("div", { class:"names" });
-    const unlockMsg = el("p", { class:"note", hidden:"" });
-    const unlock = el("button", { class:"ghost", text:"Unlock and change my guesses", onclick:async () => {
-      unlock.disabled = true;
-      try {
-        const now = await store.get();
-        if (now.revealed) { clearInterval(timer); results(now); return; }
-        await store.unvote(myId);           // the speaker's counter goes down by one
-        submitted = null;
-        try { localStorage.removeItem(LKEY + ":sent"); } catch (e) {}
-        clearInterval(timer); form();
-      } catch (e) { unlock.disabled = false; unlockMsg.hidden = false; unlockMsg.textContent = "Could not unlock. Check your connection and try again."; }
-    } });
-    app.replaceChildren(
-      el("h1", { text:"Thanks, " + submitted.name + "!" }),
-      el("div", { class:"notice" }, el("p", { text:"Your guesses are locked in. The results appear here when the speaker reveals them." })),
-      el("div", { class:"bar" }, unlock), unlockMsg,
-      el("p", { class:"lead" }, count, " submitted so far"), names
-    );
-    const tick = async () => {
-      try {
-        const d = await store.get();
-        if (d.revealed) { clearInterval(timer); results(d); return; }
-        if (!(d.votes && d.votes[myId])) {   // the speaker reset the poll: back to the form
-          submitted = null; try { localStorage.removeItem(LKEY + ":sent"); } catch (e) {}
-          clearInterval(timer); form(); return;
-        }
-        const v = votesOf(d);
-        count.textContent = v.length;
-        names.replaceChildren(...v.sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 80).map((x) => el("span", { text:String(x.name).slice(0, 20) })));
-      } catch (e) {}
-    };
-    clearInterval(timer); timer = setInterval(tick, 3000); tick();
+  async function tick() {
+    try {
+      const d = await store.get();
+      if (d.revealed) { clearInterval(timer); results(d); return; }
+      if (locked && !busy && !(d.votes && d.votes[myId])) {   // the speaker reset the poll
+        submitted = null; save(":sent", null); locked = false; render();
+      }
+      const v = votesOf(d);
+      count.textContent = v.length;
+      names.replaceChildren(...v.sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 80).map((x) => el("span", { text:String(x.name).slice(0, 20) })));
+    } catch (e) {}
   }
 
   function results(d) {
@@ -304,9 +294,11 @@ function audience() {
       chart(t, all.map((v) => v.g[i]), MODELS.map((m) => m.id), mine ? mine[i] : null)
     )));
     app.append(source());
+    window.scrollTo(0, 0);
   }
 
-  if (submitted) waiting(); else form();
+  render();
+  timer = setInterval(tick, 3000); tick();
 }
 
 function source() {
